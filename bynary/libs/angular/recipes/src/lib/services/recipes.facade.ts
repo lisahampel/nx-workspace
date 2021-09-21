@@ -1,0 +1,31 @@
+import { Injectable } from '@angular/core';
+import { IRecipe } from '../models/recipe.model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class RecipesFacade {
+
+  constructor() {
+  }
+
+  addRecipe(recipe: IRecipe) {
+
+  }
+
+  updateRecipe(index: number, recipe: IRecipe) {
+
+  }
+
+  deleteRecipe(index: number) {
+
+  }
+
+  getRecipe(index: number) {
+
+  }
+
+  getRecipes() {
+
+  }
+}

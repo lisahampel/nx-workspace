@@ -1,0 +1,28 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@bynary/angular": ["libs/angular/src/index.ts"],
+      "@bynary/angular-ingredient": ["libs/angular/ingredient/src/index.ts"],
+      "@bynary/angular-recipes": ["libs/angular/recipes/src/index.ts"],
+      "@bynary/angular/shared": ["libs/angular/shared/src/index.ts"],
+      "@bynary/angular/shopping-list": [
+        "libs/angular/shopping-list/src/index.ts"
+      ]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

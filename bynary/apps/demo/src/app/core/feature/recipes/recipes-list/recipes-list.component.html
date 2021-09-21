@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-xs-12">
+    <button class="btn btn-success" (click)="onNewRecipe()">New Recipe</button>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-xs-12">
+    <bynary-recipe-item-component
+      *ngFor="let recipeEl of recipes; let i = index"
+    [recipe]="recipeEl" [index]="i"></bynary-recipe-item-component>
+  </div>
+</div>

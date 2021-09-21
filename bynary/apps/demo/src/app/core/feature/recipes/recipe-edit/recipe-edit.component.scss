@@ -1,0 +1,15 @@
+bynary-recipe-edit-component {
+  display: block;
+}
+
+.c-recipe-edit-component {
+
+  .row {
+    margin-top: 0.625rem;
+  }
+
+  input.ng-invalid.ng-touched,
+  textarea.ng-invalid.ng-touched {
+    border: 0.125rem solid red;
+  }
+}
