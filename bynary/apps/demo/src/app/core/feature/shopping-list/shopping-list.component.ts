@@ -18,7 +18,6 @@ import { ShoppingListState } from '../../../../../../../libs/angular/shopping-li
 export class ShoppingListComponent implements OnInit, OnDestroy {
   // TODO: ingredients müssen Observable sein
   ingredients: IIngredient[] | null = [];
-  //  readonly ingredients$: Observable<IIngredient[] | null>;
   subscription!: Subscription;
 
   constructor(private readonly _shoppingListFacade: ShoppingListFacade,
@@ -30,10 +29,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.subscription = this._shoppingListFacade.ingredientsChanged.subscribe(
       (ingredients: IIngredient[]) => {
         this.ingredients = ingredients;
-        console.log('ShoppingListComponent - ingredientsChanged');
       }
     );
-    // this.ingredients = this._shoppingListService.getIngredients();
     // TODO: über shoppingListFacade auf State zugreifen
     this.ingredients = this._store.selectSnapshot(ShoppingListState.getIngredients);
   }
