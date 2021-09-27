@@ -28,6 +28,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // TODO: work with subscribtion when shopping list is edited
     this._subscription = this._shoppingListFacade.startedEditing.subscribe(
       (index: number) => {
         this.editedItemIndex = index;
@@ -54,6 +55,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
       this._shoppingListFacade.updateIngredient(this.editedItemIndex, newIngredient);
       // this._shoppingListService.updateIngredient(this.editedItemIndex, newIngredient);
     } else {
+      // TODO: subscribe to update shoppingList (siehe Abschnitt 18: 262. Sending a delete request)
       this._shoppingListFacade.addIngredient(newIngredient);
       // this._store.dispatch(new ShoppingListActions.AddIngredient(newIngredient)).subscribe(() => this.resetForm(form));
     }
