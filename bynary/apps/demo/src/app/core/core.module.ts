@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { RecipesService } from '@bynary/angular-recipes';
@@ -13,6 +14,8 @@ import { AppState } from './state/app.state';
 @NgModule({
   imports: [
     CommonModule,
+
+    HttpClientModule,
 
     NgxsModule.forRoot([AppState]),
     NgxsRouterPluginModule.forRoot(),

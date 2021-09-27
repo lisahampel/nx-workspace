@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { RecipesResolverService } from '@bynary/angular-recipes';
 import { RecipeDetailComponent } from '../feature/recipes/recipe-detail/recipe-detail.component';
 import { RecipeEditComponent } from '../feature/recipes/recipe-edit/recipe-edit.component';
 import { RecipeStartComponent } from '../feature/recipes/recipe-start/recipe-start.component';
@@ -25,11 +26,13 @@ export const APP_ROUTES: Routes = [
       },
       {
         path: ':id',
-        component: RecipeDetailComponent
+        component: RecipeDetailComponent,
+        resolve: [RecipesResolverService]
       },
       {
         path: ':id/edit',
-        component: RecipeEditComponent
+        component: RecipeEditComponent,
+        resolve: [RecipesResolverService]
       }
     ]
   },

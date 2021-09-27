@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { DataStorageService } from '../../../../../../../libs/angular/shared/src/lib/services/data-storage.service';
 
 @Component({
   selector: 'bynary-header-component',
@@ -11,4 +12,15 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
   }
 })
 export class HeaderComponent {
+
+  constructor(private _dataStorageService: DataStorageService) {
+  }
+
+  onSaveData() {
+    this._dataStorageService.storeRecipes();
+  }
+
+  onFetchData() {
+    this._dataStorageService.fetchRecipes().subscribe();
+  }
 }

@@ -8,7 +8,7 @@ import { IRecipe } from '../models/recipe.model';
 export class RecipesService {
   recipeChanged = new Subject<IRecipe[]>();
 
-  private _recipes: IRecipe[] = [
+  /*private _recipes: IRecipe[] = [
     {
       name: 'Test Recipe',
       description: 'This is a simply test',
@@ -41,9 +41,17 @@ export class RecipesService {
         }
       ]
     }
-  ];
+  ];*/
+
+  private _recipes: IRecipe[] = [];
 
   constructor(private readonly _shoppingListFacade: ShoppingListFacade) {
+  }
+
+  // TODO: fix error
+  setRecipes(recipes: IRecipe[]) {
+    this._recipes = recipes;
+    this.recipeChanged.next(this._recipes.slice());
   }
 
   getRecipes() {
