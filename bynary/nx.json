@@ -30,6 +30,9 @@
     "angular": {
       "tags": []
     },
+    "angular-auth": {
+      "tags": []
+    },
     "angular-ingredient": {
       "tags": []
     },
@@ -40,6 +43,9 @@
       "tags": []
     },
     "angular-shopping-list": {
+      "tags": []
+    },
+    "auth": {
       "tags": []
     },
     "demo": {

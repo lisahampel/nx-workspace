@@ -18,10 +18,12 @@
       "@bynary/angular": ["libs/angular/src/index.ts"],
       "@bynary/angular-ingredient": ["libs/angular/ingredient/src/index.ts"],
       "@bynary/angular-recipes": ["libs/angular/recipes/src/index.ts"],
+      "@bynary/angular/auth": ["libs/angular/auth/src/index.ts"],
       "@bynary/angular/shared": ["libs/angular/shared/src/index.ts"],
       "@bynary/angular/shopping-list": [
         "libs/angular/shopping-list/src/index.ts"
-      ]
+      ],
+      "@bynary/auth": ["libs/auth/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

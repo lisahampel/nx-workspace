@@ -26,6 +26,31 @@
         }
       }
     },
+    "angular-auth": {
+      "projectType": "library",
+      "root": "libs/angular/auth",
+      "sourceRoot": "libs/angular/auth/src",
+      "prefix": "bynary",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/angular/auth"],
+          "options": {
+            "jestConfig": "libs/angular/auth/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/angular/auth/src/**/*.ts",
+              "libs/angular/auth/src/**/*.html"
+            ]
+          }
+        }
+      }
+    },
     "angular-ingredient": {
       "projectType": "library",
       "root": "libs/angular/ingredient",
@@ -121,6 +146,31 @@
             "lintFilePatterns": [
               "libs/angular/shopping-list/src/**/*.ts",
               "libs/angular/shopping-list/src/**/*.html"
+            ]
+          }
+        }
+      }
+    },
+    "auth": {
+      "projectType": "library",
+      "root": "libs/auth",
+      "sourceRoot": "libs/auth/src",
+      "prefix": "bynary",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/auth"],
+          "options": {
+            "jestConfig": "libs/auth/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/auth/src/**/*.ts",
+              "libs/auth/src/**/*.html"
             ]
           }
         }

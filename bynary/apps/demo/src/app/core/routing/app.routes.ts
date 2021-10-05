@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { RecipesResolverService } from '@bynary/angular-recipes';
+import { AuthGuard } from '../../../../../../libs/angular/auth/src/lib/guards/auth.guard';
+import { AuthComponent } from '../components/auth/auth.component';
 import { RecipeDetailComponent } from '../feature/recipes/recipe-detail/recipe-detail.component';
 import { RecipeEditComponent } from '../feature/recipes/recipe-edit/recipe-edit.component';
 import { RecipeStartComponent } from '../feature/recipes/recipe-start/recipe-start.component';
@@ -15,6 +17,7 @@ export const APP_ROUTES: Routes = [
   {
     path: 'recipes',
     component: RecipesComponent,
+    canActivate: [AuthGuard],
     children: [
       {
         path: '',
@@ -39,5 +42,9 @@ export const APP_ROUTES: Routes = [
   {
    path: 'shopping-list',
    component: ShoppingListComponent
+  },
+  {
+    path: 'auth',
+    component: AuthComponent
   }
 ]

@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IRecipe, RecipesService } from '@bynary/angular-recipes';
 import { map, tap } from 'rxjs/operators';
+import { AuthFacade } from '../../../../auth/src/lib/services/auth.facade';
 
 @Injectable({
     providedIn: 'root'
 })
 export class DataStorageService {
 
-    constructor(private _http: HttpClient, private _recipesService: RecipesService) {
+    constructor(private _http: HttpClient, private _recipesService: RecipesService, private readonly _authFacade: AuthFacade) {
     }
 
     storeRecipes() {
@@ -21,8 +22,8 @@ export class DataStorageService {
 
     fetchRecipes() {
         return this._http.get<IRecipe[]>('https://recipe-book-e1564-default-rtdb.firebaseio.com/recipes.json')
-            // rxjs Operator
             .pipe(
+                // rxjs Operator
                 map(recipes => {
                     // Javascript Array method
                     recipes.map((recipe: IRecipe) => {
