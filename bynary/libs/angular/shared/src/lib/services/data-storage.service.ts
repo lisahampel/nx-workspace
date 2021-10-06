@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IRecipe, RecipesService } from '@bynary/angular-recipes';
+import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { AuthFacade } from '../../../../auth/src/lib/services/auth.facade';
 
@@ -20,20 +21,18 @@ export class DataStorageService {
             });
     }
 
-    fetchRecipes() {
+    fetchRecipes(): Observable<any> {
         return this._http.get<IRecipe[]>('https://recipe-book-e1564-default-rtdb.firebaseio.com/recipes.json')
             .pipe(
                 // rxjs Operator
                 map(recipes => {
                     // Javascript Array method
-                    recipes.map((recipe: IRecipe) => {
-                        console.log(recipes);
+                    return recipes.map((recipe: IRecipe) => {
                         // Hat das Rezept Zutaten, werden diese mit gespeichert, ansonsten wird ein leeres Array zum Speichern übergeben
-                        console.log({ ...recipe, ingredients: recipe.ingredients ? recipe.ingredients : [] });
                         return { ...recipe, ingredients: recipe.ingredients ? recipe.ingredients : [] };
                     });
                 }),
-                tap((recipes: any) => {
+                tap(recipes => {
                     this._recipesService.setRecipes(recipes);
                 })
             );

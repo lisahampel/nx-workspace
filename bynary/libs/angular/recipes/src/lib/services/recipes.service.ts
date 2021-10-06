@@ -48,7 +48,6 @@ export class RecipesService {
   constructor(private readonly _shoppingListFacade: ShoppingListFacade) {
   }
 
-  // TODO: fix error
   setRecipes(recipes: IRecipe[]) {
     this._recipes = recipes;
     this.recipeChanged.next(this._recipes.slice());
