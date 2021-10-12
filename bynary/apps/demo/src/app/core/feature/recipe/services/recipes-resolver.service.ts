@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
-import { IRecipe } from '../../../../../../apps/demo/src/app/core/feature/recipe/models/recipe.interface';
-import { DataStorageService } from '../../../../shared/src/lib/services/data-storage.service';
+import { DataStorageService } from '../../../../../../../../libs/angular/shared/src';
+import { IRecipe } from '../models/recipe.interface';
 import { RecipesService } from './recipes.service';
 
 @Injectable({

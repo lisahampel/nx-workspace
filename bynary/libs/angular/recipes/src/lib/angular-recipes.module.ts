@@ -7,10 +7,10 @@ import { RecipesState } from './state/recipes.state';
 @NgModule({
   imports: [
     CommonModule,
-    NgxsModule.forFeature([RecipesState])
+    // NgxsModule.forFeature([RecipesState])
   ],
   providers: [
-    RecipesService
+   //  RecipesService
   ]
 })
 export class AngularRecipesModule {

@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IRecipe, RecipesService } from '@bynary/angular-recipes';
+import { RecipesService } from '@bynary/angular-recipes';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { IRecipe } from '../../../../../../apps/demo/src/app/core/feature/recipe/models/recipe.interface';
 import { AuthFacade } from '../../../../auth/src/lib/services/auth.facade';
 
 @Injectable({

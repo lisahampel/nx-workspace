@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -7,22 +6,26 @@ import { AuthInterceptorService } from '../../../../libs/angular/auth/src/lib/se
 
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
-import { RecipesModule } from './core/feature/recipes/recipes.module';
+import { RecipeModule } from './core/feature/recipe/recipe.module';
+import { ShoppingListService } from './core/feature/shopping-list/services/shopping-list.service';
 import { ShoppingListModule } from './core/feature/shopping-list/shopping-list.module';
 import { RoutingModule } from './core/routing/routing.module';
 
 @NgModule({
     imports: [
         BrowserModule,
-        CommonModule,
+        RouterModule,
+
+        //  CommonModule,
         CoreModule,
-        RecipesModule,
+        RecipeModule,
         ShoppingListModule,
         RoutingModule,
-        RouterModule
     ],
     declarations: [AppComponent],
     providers: [
+        // TODO: wird hier doch eigentlich nicht benötigt?! ShoppingListService ist bereits im ShoppingListModule unter provider gesetzt
+        ShoppingListService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptorService,

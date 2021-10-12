@@ -1,5 +1,5 @@
-import { IIngredient } from '@bynary/angular-ingredient';
-import { IRecipe } from '../../../../../../apps/demo/src/app/core/feature/recipe/models/recipe.interface';
+import { IIngredient } from '../../../../../../../../libs/angular/ingredient/src';
+import { IRecipe } from '../models/recipe.interface';
 
 export namespace RecipeActions {
 

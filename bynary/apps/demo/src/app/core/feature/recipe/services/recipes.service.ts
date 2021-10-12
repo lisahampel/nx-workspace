@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { IIngredient } from '@bynary/angular-ingredient';
 import { ShoppingListFacade } from '@bynary/angular/shopping-list';
 import { Subject } from 'rxjs';
-import { IRecipe } from '../../../../../../apps/demo/src/app/core/feature/recipe/models/recipe.interface';
+import { IRecipe } from '../models/recipe.interface';
+
 @Injectable()
 export class RecipesService {
   recipeChanged = new Subject<IRecipe[]>();

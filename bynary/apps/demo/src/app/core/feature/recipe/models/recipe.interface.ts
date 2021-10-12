@@ -1,4 +1,3 @@
-/*
 import { IIngredient } from '@bynary/angular-ingredient';
 
 export interface IRecipe {
@@ -7,4 +6,3 @@ export interface IRecipe {
   imagePath: string;
   ingredients: IIngredient[];
 }
-*/

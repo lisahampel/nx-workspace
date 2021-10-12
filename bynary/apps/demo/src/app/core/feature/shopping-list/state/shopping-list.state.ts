@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { IIngredient } from '@bynary/angular-ingredient';
 
-import { IShoppingListState, ShoppingListService } from '@bynary/angular/shopping-list';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Subject } from 'rxjs';
+import { IShoppingListState } from '../models/shopping-list.model';
+import { ShoppingListService } from '../services/shopping-list.service';
 
 import { ShoppingListActions } from './shopping-list.actions';
 
@@ -24,7 +25,7 @@ import { ShoppingListActions } from './shopping-list.actions';
 })
 @Injectable()
 export class ShoppingListState {
-    ingredientsChanged = new Subject<IIngredient[]>();
+   //  ingredientsChanged = new Subject<IIngredient[]>();
 
     @Selector()
     static getIngredients(state: IShoppingListState) {
@@ -82,7 +83,7 @@ export class ShoppingListState {
             ...state,
             ingredient: ingredientList,
         });
-        this.ingredientsChanged.next(state.ingredient);
+        // this.ingredientsChanged.next(state.ingredient);
         console.log('New STATE: ', context.getState());
     }
 
@@ -97,7 +98,7 @@ export class ShoppingListState {
             ...state,
             ingredient: filteredArray,
         });
-        this.ingredientsChanged.next(state.ingredient);
+        // this.ingredientsChanged.next(state.ingredient);
         console.log('@Action: DeleteIngredient - New STATE: ', context.getState());
     }
 

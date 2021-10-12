@@ -7,10 +7,10 @@ import { ShoppingListState } from './state/shopping-list.state';
 @NgModule({
   imports: [
     CommonModule,
-    NgxsModule.forFeature([ShoppingListState])
+    // NgxsModule.forFeature([ShoppingListState])
   ],
   providers: [
-    ShoppingListService
+    // ShoppingListService
   ]
 })
 export class AngularShoppingListModule {}
