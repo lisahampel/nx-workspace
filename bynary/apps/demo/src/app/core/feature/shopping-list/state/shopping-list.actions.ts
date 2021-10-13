@@ -1,4 +1,4 @@
-import { IIngredient } from '@bynary/angular-ingredient';
+import { IIngredient } from '../../ingredient/ingredient.interface';
 
 export namespace ShoppingListActions {
 
@@ -21,10 +21,6 @@ export namespace ShoppingListActions {
 
         constructor(readonly index: number) {
         }
-    }
-
-    export class GetIngredients {
-        static readonly type = '[Shopping List] get ingredients';
     }
 
     export class DeleteIngredient {

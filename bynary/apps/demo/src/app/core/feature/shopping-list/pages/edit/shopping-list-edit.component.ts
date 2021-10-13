@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { IIngredient } from '@bynary/angular-ingredient';
 import { Subscription } from 'rxjs';
+
+import { IIngredient } from '../../../ingredient/ingredient.interface';
 import { ShoppingListFacade } from '../../services/shopping-list.facade';
 
 @Component({
@@ -16,22 +17,20 @@ import { ShoppingListFacade } from '../../services/shopping-list.facade';
 })
 export class ShoppingListEditComponent implements OnInit, OnDestroy {
     @ViewChild('form', { static: false }) shoppingListForm!: NgForm;
+
     private _subscription!: Subscription;
     editMode: boolean = false;
     editedItemIndex!: number;
-
-    // editedItem!: Observable<IIngredient>;
 
     constructor(private readonly _shoppingListFacade: ShoppingListFacade) {
     }
 
     ngOnInit() {
-        // TODO: work with subscribtion when shopping list is edited
+        // TODO: wie kann man das ohne subscription und subject lösen?
         this._subscription = this._shoppingListFacade.startedEditing.subscribe(
             (index: number) => {
                 this.editedItemIndex = index;
                 this.editMode = true;
-                console.log('ShoppingListEditComponent - ngOnInit: ', this._shoppingListFacade.getIngredient(index));
                 this._shoppingListFacade.getIngredient(index)
                     .subscribe((ingredient: any) =>
                         this.shoppingListForm.setValue(

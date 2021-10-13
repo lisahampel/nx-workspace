@@ -19,18 +19,6 @@ export class ShoppingListFacade {
         return this._store.dispatch(new ShoppingListActions.GetIngredient(index));
     }
 
-    // TODO: Fehler 'beheben' der auftritt sobald Methode aufgerufen wird
-    /*getIngredients(): IIngredient[] | null {
-      console.log('ShoppingListFacade - getIngredients');
-      return [];
-      //return this._store.selectSnapshot(ShoppingListState.getIngredients);
-    }*/
-
-    // TODO: Fehler 'beheben' der auftritt sobald Methode aufgerufen wird
-    /*watchIngredients(): Observable<IIngredient[] | null> {
-      return this._store.select(ShoppingListState.getIngredients);
-    }*/
-
     deleteIngredient(index: number) {
         return this._store.dispatch(new ShoppingListActions.DeleteIngredient(index));
     }

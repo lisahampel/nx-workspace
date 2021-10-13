@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { RecipesService } from '@bynary/angular-recipes';
+import { RecipesFacade } from '../../services/recipes.facade';
 
 @Component({
     selector: 'bynary-recipe-edit-component',
@@ -20,7 +20,7 @@ export class RecipeEditComponent implements OnInit {
 
     constructor(private readonly _route: ActivatedRoute,
                 private readonly _router: Router,
-                private readonly _recipeService: RecipesService) {
+                private readonly _recipeFacade: RecipesFacade) {
     }
 
     ngOnInit(): void {
@@ -35,9 +35,9 @@ export class RecipeEditComponent implements OnInit {
 
     onSubmit() {
         if (this.editMode) {
-            this._recipeService.updateRecipe(this.id, this.recipeForm.value);
+            this._recipeFacade.updateRecipe(this.id, this.recipeForm.value);
         } else {
-            this._recipeService.addRecipe(this.recipeForm.value);
+            this._recipeFacade.addRecipe(this.recipeForm.value);
         }
         this.onCancel();
     }
@@ -73,23 +73,28 @@ export class RecipeEditComponent implements OnInit {
         let recipeIngredients = new FormArray([]);
 
         if (this.editMode) {
-            const recipe = this._recipeService.getRecipe(this.id);
-            recipeName = recipe.name;
-            recipeImagePath = recipe.imagePath;
-            recipeDescription = recipe.description;
-            if (recipe['ingredients']) {
-                for (let ingredient of recipe.ingredients) {
-                    recipeIngredients.push(
-                        new FormGroup({
-                            'name': new FormControl(ingredient.name, Validators.required),
-                            'amount': new FormControl(ingredient.amount, [
-                                Validators.required,
-                                Validators.pattern(/^[1-9]+[0-9]*$/)
-                            ])
-                        })
-                    );
+            // TODO: Problem wenn object von type IRecipe ist
+            this._recipeFacade.getRecipe(this.id).subscribe((object: any) => {
+                const recipe = object.recipe.recipe[this.id];
+
+                recipeName = recipe.name;
+                recipeImagePath = recipe.imagePath;
+                recipeDescription = recipe.description;
+                if (recipe['ingredients']) {
+                    for (let ingredient of recipe.ingredients) {
+                        recipeIngredients.push(
+                            new FormGroup({
+                                'name': new FormControl(ingredient.name, Validators.required),
+                                'amount': new FormControl(ingredient.amount, [
+                                    Validators.required,
+                                    Validators.pattern(/^[1-9]+[0-9]*$/)
+                                ])
+                            })
+                        );
+                    }
                 }
-            }
+            });
+
         }
 
         this.recipeForm = new FormGroup({

@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { IIngredient } from '@bynary/angular-ingredient';
 
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { Subject } from 'rxjs';
 import { IShoppingListState } from '../models/shopping-list.model';
-import { ShoppingListService } from '../services/shopping-list.service';
 
 import { ShoppingListActions } from './shopping-list.actions';
 
@@ -25,7 +23,6 @@ import { ShoppingListActions } from './shopping-list.actions';
 })
 @Injectable()
 export class ShoppingListState {
-   //  ingredientsChanged = new Subject<IIngredient[]>();
 
     @Selector()
     static getIngredients(state: IShoppingListState) {
@@ -33,11 +30,7 @@ export class ShoppingListState {
         return state.ingredient;
     }
 
-    constructor(private readonly _shoppingListService: ShoppingListService) {
-    }
-
-    @Action(ShoppingListActions.GetIngredients)
-    getIngredients(context: StateContext<IShoppingListState>) {
+    constructor() {
     }
 
     @Action(ShoppingListActions.GetIngredient)
@@ -48,8 +41,6 @@ export class ShoppingListState {
 
     @Action(ShoppingListActions.AddIngredient)
     addIngredient(context: StateContext<IShoppingListState>, action: ShoppingListActions.AddIngredient) {
-        this._shoppingListService.addIngredient(action.ingredient);
-        console.log('ShoppingListState - addIngredient');
         console.log('addIngredient ACTION: ', action, 'addIngredient INGREDIENT:', action.ingredient, 'STATE: ', context.getState());
         const state = context.getState();
         context.patchState({
@@ -63,6 +54,7 @@ export class ShoppingListState {
 
     @Action(ShoppingListActions.AddIngredients)
     addIngredients(context: StateContext<IShoppingListState>, action: ShoppingListActions.AddIngredients) {
+        console.log('@Action: addIngredients -ingredients: ', action.ingredients);
         const state = context.getState();
         const newIngredientList = [...state.ingredient];
         newIngredientList.push(...action.ingredients);
@@ -83,7 +75,6 @@ export class ShoppingListState {
             ...state,
             ingredient: ingredientList,
         });
-        // this.ingredientsChanged.next(state.ingredient);
         console.log('New STATE: ', context.getState());
     }
 
@@ -98,7 +89,6 @@ export class ShoppingListState {
             ...state,
             ingredient: filteredArray,
         });
-        // this.ingredientsChanged.next(state.ingredient);
         console.log('@Action: DeleteIngredient - New STATE: ', context.getState());
     }
 

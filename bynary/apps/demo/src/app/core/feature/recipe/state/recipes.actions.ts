@@ -1,4 +1,4 @@
-import { IIngredient } from '../../../../../../../../libs/angular/ingredient/src';
+import { IIngredient } from '../../ingredient/ingredient.interface';
 import { IRecipe } from '../models/recipe.interface';
 
 export namespace RecipeActions {
@@ -22,10 +22,6 @@ export namespace RecipeActions {
 
     constructor(readonly index: number) {
     }
-  }
-
-  export class GetRecipes {
-    static readonly type = '[Recipes] get recipes';
   }
 
   export class DeleteRecipe {

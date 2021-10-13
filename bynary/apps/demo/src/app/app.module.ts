@@ -16,7 +16,6 @@ import { RoutingModule } from './core/routing/routing.module';
         BrowserModule,
         RouterModule,
 
-        //  CommonModule,
         CoreModule,
         RecipeModule,
         ShoppingListModule,

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
+
 import { IIngredient } from '../../ingredient/ingredient.interface';
 import { ShoppingListActions } from '../state/shopping-list.actions';
 import { ShoppingListState } from '../state/shopping-list.state';
@@ -10,7 +11,7 @@ import { ShoppingListState } from '../state/shopping-list.state';
     providedIn: 'root'
 })
 export class ShoppingListFacade {
-   // ingredientsChanged = new Subject<IIngredient[]>();
+    // TODO: bessere Lösung finden für startedEditing
     startedEditing = new Subject<number>();
 
     constructor(private readonly _store: Store) {
@@ -20,14 +21,8 @@ export class ShoppingListFacade {
         return this._store.dispatch(new ShoppingListActions.GetIngredient(index));
     }
 
-    // TODO: Fehler 'beheben' der auftritt sobald Methode aufgerufen wird
-    getIngredients(): IIngredient[] | null {
-      console.log('ShoppingListFacade - getIngredients');
-      return this._store.selectSnapshot(ShoppingListState.getIngredients);
-    }
-
     watchIngredients(): Observable<IIngredient[] | null> {
-      return this._store.select(ShoppingListState.getIngredients);
+        return this._store.select(ShoppingListState.getIngredients);
     }
 
     deleteIngredient(index: number) {

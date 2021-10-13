@@ -15,11 +15,5 @@ export class RecipesResolverService implements Resolve<IRecipe[]> {
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IRecipe[]> {
         return this._dataStorageService.fetchRecipes();
-
-        /*if(recipes.length === 0) {
-            return this._dataStorageService.fetchRecipes();
-        } else {
-            return recipes;
-        }*/
     }
 }
