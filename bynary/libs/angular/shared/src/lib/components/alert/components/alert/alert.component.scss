@@ -1,0 +1,28 @@
+bynary-alert {
+    display: block;
+}
+
+.c-alert-component {
+
+    .backdrop {
+        background: rgba(0, 0, 0, 0.75);
+        height: 100vw;
+        position: fixed; top: 0; left: 0;
+        width: 100vw;
+        z-index: 50;
+    }
+
+    .alert-box {
+        background: white;
+        box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.26);
+        padding: 1rem;
+        position: fixed; top: 30vh; left: 20vw;
+        width: 60vw;
+        z-index: 100;
+    }
+
+    .alert-box-actions {
+        text-align: right;
+    }
+
+}

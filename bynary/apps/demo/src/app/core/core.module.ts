@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { RecipesService } from '@bynary/angular-recipes';
-import { AngularSharedModule } from '@bynary/angular/shared';
+import { AlertComponent, AngularSharedModule } from '@bynary/angular/shared';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsModule } from '@ngxs/store';
