@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { PreloadAllModules, RouterModule } from '@angular/router';
 
 import { APP_ROUTES } from './app.routes';
 
@@ -9,7 +9,7 @@ import { APP_ROUTES } from './app.routes';
   declarations: [],
   imports: [
     CommonModule,
-    RouterModule.forRoot(APP_ROUTES)
+    RouterModule.forRoot(APP_ROUTES, { preloadingStrategy: PreloadAllModules})
   ],
   exports: [
     RouterModule
