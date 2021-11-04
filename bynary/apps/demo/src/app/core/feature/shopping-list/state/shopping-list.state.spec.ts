@@ -29,8 +29,7 @@ describe('ShoppingListState', () => {
     it('should get ingredient', async () => {
         const ingredient = store.dispatch(new ShoppingListActions.GetIngredient(1));
         ingredient.subscribe((ingredient: IIngredient) => {
-            expect(ingredient.name).toEqual('Onion');
-            expect(ingredient.amount).toEqual(5);
+            expect(ingredient).toEqual({ name: 'Onion', amount: 5 });
         });
     });
 
