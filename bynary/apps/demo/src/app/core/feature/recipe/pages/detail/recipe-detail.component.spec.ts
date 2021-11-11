@@ -16,7 +16,7 @@ describe('RecipeDetailComponent', () => {
     let fixture: ComponentFixture<RecipeDetailComponent>;
     let mockedActivatedRoute: MaybeMocked<ActivatedRoute>;
     let mockedRouter: MaybeMocked<Router>;
-    let mockedRecipeFace: MaybeMocked<RecipesFacade>;
+    let mockedRecipeFacade: MaybeMocked<RecipesFacade>;
 
     const recipe = {
         name: 'Schnitzel mit Pommes', description: 'Bla bla',
@@ -63,7 +63,7 @@ describe('RecipeDetailComponent', () => {
 
         mockedActivatedRoute = mocked(TestBed.inject(ActivatedRoute));
         mockedRouter = mocked(TestBed.inject(Router));
-        mockedRecipeFace = mocked(TestBed.inject(RecipesFacade));
+        mockedRecipeFacade = mocked(TestBed.inject(RecipesFacade));
 
         component.recipe = recipe;
 
@@ -77,19 +77,20 @@ describe('RecipeDetailComponent', () => {
     describe('logic', () => {
 
         it('should call getRecipe method when ngOnInit is called', () => {
-            expect(mockedRecipeFace.getRecipe).toHaveBeenCalledWith(1);
+            expect(mockedRecipeFacade.getRecipe).toHaveBeenCalledWith(1);
+            expect(mockedRecipeFacade.getRecipe).toHaveBeenCalledTimes(1);
         });
 
         it('should call addIngredientsToShoppingList in onAddToShoppingList method', () => {
             component.onAddToShoppingList();
-            expect(mockedRecipeFace.addIngredientsToShoppingList).toHaveBeenCalledWith([
-                { name: 'Schnitzel', amount: 2, },
-                { name: 'Pommes', amount: 1 }
-            ]);
+
+            expect(mockedRecipeFacade.addIngredientsToShoppingList)
+                .toHaveBeenCalledWith([{ name: 'Schnitzel', amount: 2, }, { name: 'Pommes', amount: 1 }]);
         });
 
         it('should navigate to edit page when call onEditRecipe method', () => {
             component.onEditRecipe();
+
             expect(mockedRouter.navigate).toHaveBeenCalledWith(['edit'], { relativeTo: { params: mockedActivatedRoute.params } });
         });
 
@@ -100,7 +101,8 @@ describe('RecipeDetailComponent', () => {
             });
 
             it('should call recipeFacade.deleteRecipe with the correct arguments', () => {
-                expect(mockedRecipeFace.deleteRecipe).toHaveBeenCalledWith(1);
+                expect(mockedRecipeFacade.deleteRecipe).toHaveBeenCalledWith(1);
+                expect(mockedRecipeFacade.deleteRecipe).toHaveBeenCalledTimes(1);
             });
 
             it('should call router.navigate with the correct arguments', () => {
@@ -138,43 +140,80 @@ describe('RecipeDetailComponent', () => {
                 expect(recipeDescription.nativeElement.textContent).toEqual(' Bla bla ');
             });
 
-            it('should have a ingredients', () => {
+            it('should have ingredients', () => {
                 const recipeIngredients = debugElement.queryAll(By.css('.c-recipe-detail-component__recipe-ingredients'));
 
                 expect(recipeIngredients).toHaveLength(2);
-                expect(recipeIngredients[0].nativeElement.textContent).toEqual(' Schnitzel - 2 ');
-                expect(recipeIngredients[1].nativeElement.textContent).toEqual(' Pommes - 1 ');
+            });
+
+            describe('ingredients', () => {
+                let recipeIngredients: DebugElement[];
+
+                beforeEach(() => {
+                    recipeIngredients = debugElement.queryAll(By.css('.c-recipe-detail-component__recipe-ingredients'));
+                });
+
+                it('should contain ingredient Schnitzel (2)', function () {
+                    expect(recipeIngredients[0].nativeElement.textContent).toEqual(' Schnitzel - 2 ');
+                });
+
+                it('should contain ingredient Pommes (1)', function () {
+                    expect(recipeIngredients[1].nativeElement.textContent).toEqual(' Pommes - 1 ');
+                });
+
             });
 
         });
 
-        // TODO: Überprüfen, ob Buttons richtige Texte anzeigen
+        describe('buttons', () => {
+            let deleteRecipeBtn: DebugElement;
+            let toShoppingListBtn: DebugElement;
+            let editRecipeBtn: DebugElement;
 
-        it('should call onAddToShoppingList method when button "To Shopping List" is clicked', () => {
-            const addToShoppingList = jest.spyOn(component, 'onAddToShoppingList');
-            const toShoppingListButton = debugElement.query(By.css('#toShoppingList'));
+            beforeEach(() => {
+                toShoppingListBtn = debugElement.query(By.css('#toShoppingList'));
+                editRecipeBtn = debugElement.query(By.css('#editRecipe'));
+                deleteRecipeBtn = debugElement.query(By.css('#deleteRecipe'));
+            });
 
-            toShoppingListButton.triggerEventHandler('click', addToShoppingList);
+            it('should call onAddToShoppingList method when button "To Shopping List" is clicked', () => {
+                const addToShoppingList = jest.spyOn(component, 'onAddToShoppingList');
 
-            expect(addToShoppingList).toHaveBeenCalledTimes(1);
-        });
+                toShoppingListBtn.triggerEventHandler('click', addToShoppingList);
 
-        it('should call onEditRecipe method when button "Edit Recipe" is clicked', () => {
-            const onEditRecipe = jest.spyOn(component, 'onEditRecipe');
-            const editRecipeButton = debugElement.query(By.css('#editRecipe'));
+                expect(addToShoppingList).toHaveBeenCalledTimes(1);
+            });
 
-            editRecipeButton.triggerEventHandler('click', onEditRecipe);
+            it('should have correct label: To Shopping List', () => {
+                expect(toShoppingListBtn.nativeElement.textContent).toEqual('To Shopping List');
+            });
 
-            expect(onEditRecipe).toHaveBeenCalledTimes(1);
-        });
 
-        it('should call onDeleteRecipe method when button "onDeleteRecipe" is clicked', () => {
-            const onDeleteRecipe = jest.spyOn(component, 'onDeleteRecipe');
-            const deleteRecipe = debugElement.query(By.css('#deleteRecipe'));
+            it('should call onEditRecipe method when button "Edit Recipe" is clicked', () => {
+                const onEditRecipe = jest.spyOn(component, 'onEditRecipe');
 
-            deleteRecipe.triggerEventHandler('click', onDeleteRecipe);
+                editRecipeBtn.triggerEventHandler('click', onEditRecipe);
 
-            expect(onDeleteRecipe).toHaveBeenCalledTimes(1);
+                expect(onEditRecipe).toHaveBeenCalledTimes(1);
+            });
+
+            it('should have correct label: Edit Recipe', () => {
+                expect(editRecipeBtn.nativeElement.textContent).toEqual('Edit Recipe');
+            });
+
+
+            it('should call onDeleteRecipe method when button "Delete Recipe" button is clicked', () => {
+                const onDeleteRecipe = jest.spyOn(component, 'onDeleteRecipe');
+
+                deleteRecipeBtn.triggerEventHandler('click', onDeleteRecipe);
+
+                expect(onDeleteRecipe).toHaveBeenCalledTimes(1);
+            });
+
+            it('should have correct label: Delete Recipe', () => {
+                expect(deleteRecipeBtn.nativeElement.textContent).toEqual('Delete Recipe');
+            });
+
         });
 
     });
