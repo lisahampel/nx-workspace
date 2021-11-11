@@ -35,6 +35,11 @@ export class RecipesState {
         return state.recipe;
     }
 
+    @Selector()
+    static getRecipe(index: number) {
+        return createSelector([RecipesState.getRecipes], (recipes) => recipes[index]);
+    }
+
     constructor() {
     }
 

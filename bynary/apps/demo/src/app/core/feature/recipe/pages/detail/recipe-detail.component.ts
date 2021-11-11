@@ -1,5 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Observable, Subject } from 'rxjs';
+import { map, pluck, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { IRecipe } from '../../models/recipe.interface';
 import { RecipesFacade } from '../../services/recipes.facade';
 
 @Component({
@@ -12,26 +15,39 @@ import { RecipesFacade } from '../../services/recipes.facade';
         class: 'c-recipe-detail-component'
     }
 })
-export class RecipeDetailComponent implements OnInit {
+export class RecipeDetailComponent implements OnInit, OnDestroy {
     // TODO: recipe IRecipe
-    recipe!: any;
+    recipe!: IRecipe;
     id!: number;
+
+    readonly recipe$: Observable<IRecipe>;
+
+    private readonly _onDestroy = new Subject();
 
     constructor(private readonly _recipeFacade: RecipesFacade,
                 private readonly _route: ActivatedRoute,
                 private readonly _router: Router) {
+        this.recipe$ = this._route.params
+            .pipe(
+                pluck('id'),
+                tap((id) => {
+                    this.id = id;
+                }),
+                switchMap((id) => this._recipeFacade.watchRecipe(id)),
+                takeUntil(this._onDestroy)
+            );
     }
 
     ngOnInit() {
-        this._route.params.subscribe(
-            (params: Params) => {
-                this.id = +params['id'];
-                this._recipeFacade.getRecipe(this.id).subscribe((recipe: any) => {
-                    console.log('recipe: ', recipe);
-                    this.recipe = recipe.recipe.recipe[this.id];
-                });
-            }
-        );
+        this.recipe$ .subscribe((recipe) => {
+                console.log('recipe: ', recipe);
+                this.recipe = recipe;
+            });
+    }
+
+    ngOnDestroy() {
+        this._onDestroy.next();
+        this._onDestroy.complete();
     }
 
     onAddToShoppingList() {
