@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
+
+import * as uuid from 'uuid';
 
 import { IIngredient } from '../../../ingredient/ingredient.interface';
 import { ShoppingListFacade } from '../../services/shopping-list.facade';
@@ -46,8 +48,9 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
 
     onSubmit(form: NgForm) {
         console.log(form.valid);
+        console.log('FORM: ', form);
         const value = form.value;
-        const newIngredient: IIngredient = { name: value.name, amount: value.amount };
+        const newIngredient: IIngredient = { id: uuid.v4(), name: value.name, amount: value.amount };
         if (this.editMode) {
             this._shoppingListFacade.updateIngredient(this.editedItemIndex, newIngredient);
         } else {

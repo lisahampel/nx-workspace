@@ -25,14 +25,19 @@
       </div>
       <div class="row">
         <div class="col-xs-12">
-          <button class="btn btn-success"
+          <button id="onSubmitBtn"
+                  class="btn btn-success"
                   type="submit"
                   [disabled]="!form.valid">{{ editMode ? 'Update' : 'Add' }}</button>
-          <button class="btn btn-danger"
+          <button id="onDeleteBtn"
+                  class="btn btn-danger"
                   type="button"
                   *ngIf="editMode"
                   (click)="onDelete()">Delete</button>
-          <button class="btn btn-primary" type="button" (click)="onClear()">Clear</button>
+          <button id="onClearBtn"
+                  class="btn btn-primary"
+                  type="button"
+                  (click)="onClear()">Clear</button>
         </div>
       </div>
     </form>
