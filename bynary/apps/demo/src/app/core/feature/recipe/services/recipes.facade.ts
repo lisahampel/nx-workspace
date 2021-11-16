@@ -16,8 +16,17 @@ export class RecipesFacade {
                 private readonly _shoppingListFacade: ShoppingListFacade) {
     }
 
+    // TODO: wenn nicht genutzt, dann raus!
+    getRecipes() {
+        return this._store.selectSnapshot(RecipesState.getRecipes);
+    }
+
     watchRecipes(): Observable<IRecipe[] | null> {
         return this._store.select(RecipesState.getRecipes);
+    }
+
+    watchRecipe(index: number): Observable<IRecipe> {
+        return this._store.select(RecipesState.getRecipe(index));
     }
 
     addRecipe(recipe: IRecipe) {
@@ -30,16 +39,6 @@ export class RecipesFacade {
 
     deleteRecipe(index: number) {
         this._store.dispatch(new RecipeActions.DeleteRecipe(index));
-        console.log('RecipesFacade delete recipe');
-    }
-
-    getRecipe(index: number): Observable<IRecipe> {
-        return this._store.dispatch(new RecipeActions.GetRecipe(index));
-    }
-
-    // TODO: wenn nicht genutzt, dann raus!
-    getRecipes() {
-
     }
 
     addIngredientsToShoppingList(ingredients: IIngredient[]) {

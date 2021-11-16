@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
+
+import * as uuid from 'uuid';
 
 import { IIngredient } from '../../../ingredient/ingredient.interface';
 import { ShoppingListFacade } from '../../services/shopping-list.facade';
@@ -22,7 +24,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
     editMode: boolean = false;
     editedItemIndex!: number;
 
-    constructor(private readonly _shoppingListFacade: ShoppingListFacade) {
+    constructor(private readonly _shoppingListFacade: ShoppingListFacade, private readonly _changeDetectorRef: ChangeDetectorRef) {
     }
 
     ngOnInit() {
@@ -32,22 +34,23 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
                 this.editedItemIndex = index;
                 this.editMode = true;
                 this._shoppingListFacade.getIngredient(index)
-                    .subscribe((ingredient: any) =>
-                        this.shoppingListForm.setValue(
-                            {
-                                name: ingredient.shoppingList.ingredient[index].name,
-                                amount: ingredient.shoppingList.ingredient[index].amount
-                            }
-                        )
+                    .subscribe((ingredient: any) => {
+                            this.shoppingListForm.setValue(
+                                {
+                                    name: ingredient.shoppingList.ingredient[index].name,
+                                    amount: ingredient.shoppingList.ingredient[index].amount
+                                }
+                            );
+                            this._changeDetectorRef.detectChanges();
+                        }
                     );
             }
         );
     }
 
     onSubmit(form: NgForm) {
-        console.log(form.valid);
         const value = form.value;
-        const newIngredient: IIngredient = { name: value.name, amount: value.amount };
+        const newIngredient: IIngredient = { id: uuid.v4(), name: value.name, amount: value.amount };
         if (this.editMode) {
             this._shoppingListFacade.updateIngredient(this.editedItemIndex, newIngredient);
         } else {
