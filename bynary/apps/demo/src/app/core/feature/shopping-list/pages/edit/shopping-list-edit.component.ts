@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -24,7 +24,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
     editMode: boolean = false;
     editedItemIndex!: number;
 
-    constructor(private readonly _shoppingListFacade: ShoppingListFacade) {
+    constructor(private readonly _shoppingListFacade: ShoppingListFacade, private readonly _changeDetectorRef: ChangeDetectorRef) {
     }
 
     ngOnInit() {
@@ -34,21 +34,21 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
                 this.editedItemIndex = index;
                 this.editMode = true;
                 this._shoppingListFacade.getIngredient(index)
-                    .subscribe((ingredient: any) =>
-                        this.shoppingListForm.setValue(
-                            {
-                                name: ingredient.shoppingList.ingredient[index].name,
-                                amount: ingredient.shoppingList.ingredient[index].amount
-                            }
-                        )
+                    .subscribe((ingredient: any) => {
+                            this.shoppingListForm.setValue(
+                                {
+                                    name: ingredient.shoppingList.ingredient[index].name,
+                                    amount: ingredient.shoppingList.ingredient[index].amount
+                                }
+                            );
+                            this._changeDetectorRef.detectChanges();
+                        }
                     );
             }
         );
     }
 
     onSubmit(form: NgForm) {
-        console.log(form.valid);
-        console.log('FORM: ', form);
         const value = form.value;
         const newIngredient: IIngredient = { id: uuid.v4(), name: value.name, amount: value.amount };
         if (this.editMode) {

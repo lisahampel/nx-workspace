@@ -1,12 +1,13 @@
 import { DebugElement } from '@angular/core';
-import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NgxsModule } from '@ngxs/store';
 import { MaybeMocked, mocked } from 'ts-jest/dist/utils/testing';
-import { IIngredient } from '../../../ingredient/ingredient.interface';
 import { ShoppingListFacade } from '../../services/shopping-list.facade';
 import { ShoppingListState } from '../../state/shopping-list.state';
+
+import { runOnPushChangeDetection } from '../../../../utils/test.utils';
 
 import { ShoppingListEditComponent } from './shopping-list-edit.component';
 
@@ -18,6 +19,7 @@ describe('ShoppingListEditComponent', () => {
     const mockedNgForm = {
         onReset: () => null,
         reset: () => null,
+        setValue: () => null,
         valid: true,
         value: {
             name: 'milk',
@@ -62,209 +64,273 @@ describe('ShoppingListEditComponent', () => {
         expect(component).toBeTruthy();
     });
 
-   describe('logic', () => {
+    describe('logic', () => {
+        let spy1: jest.SpyInstance;
+        let spy2: jest.SpyInstance;
 
-       /*it('should call shoppingListFacade.getIngredient method', () => {
-           expect(mockedShoppingListFacade.getIngredient).toHaveBeenCalledTimes(1);
+        beforeEach(() => {
+            spy1 = jest.spyOn(mockedNgForm, 'setValue');
+            spy2 = jest.spyOn(mockedShoppingListFacade.startedEditing, 'subscribe');
+        });
 
-           // const setValue = jest.spyOn(component.shoppingListForm, 'setValue');
-           // component.shoppingListForm.setValue({ name: 'Onion', amount: 5 });
-           // expect(setValue).toHaveBeenCalledTimes(1);
-       });*/
+        afterEach(() => {
+           spy1.mockReset();
+           spy2.mockReset();
+        });
 
-       describe('onSubmit', () => {
+        it('should subscribe to shoppingListFacade.startedEditing', () => {
+            expect(spy2).toHaveBeenCalledTimes(1);
+            // expect(spy1).toHaveBeenCalledTimes(1);
+        });
 
-           describe('onSubmit with editMode = true', () => {
+        it('should call shoppingListFacade.getIngredient', () => {
+            // expect(mockedShoppingListFacade.getIngredient).toHaveBeenCalledTimes(1);
+        });
 
-               beforeEach(() => {
-                   component.editMode = true;
-                   component.onSubmit(mockedNgForm);
-               });
+        it('should call shoppingListForm.setValue', () => {
+            // TODO
+        });
 
-               it('should call shoppingListFacade.updateIngredient() method', () => {
-                   expect(mockedShoppingListFacade.updateIngredient).toHaveBeenCalledTimes(1);
-                   // TODO: erst testen, wenn Code in component ausgebessert wurde
-                   // expect(mockedShoppingListFacade.updateIngredient).toHaveBeenCalledWith({ name: 'milk', amount: 2 });
-               });
-           });
+        describe('onSubmit', () => {
 
-           describe('onSubmit with editMode = false', () => {
+            describe('onSubmit with editMode = true', () => {
 
-               beforeEach(() => {
-                   component.editMode = false;
-                   component.onSubmit(mockedNgForm);
-               });
+                beforeEach(() => {
+                    component.editMode = true;
+                    component.onSubmit(mockedNgForm);
+                });
 
-               it('should call shoppingListFacade.addIngredient() method', () => {
-                   expect(mockedShoppingListFacade.addIngredient).toHaveBeenCalledTimes(1);
-                   // TODO: erst testen, wenn Code in component ausgebessert wurde
-                   // expect(mockedShoppingListFacade.addIngredient).toHaveBeenCalledWith({ id: '1', name: 'milk', amount: 2});
-               });
-           });
+                it('should call shoppingListFacade.updateIngredient() method', () => {
+                    expect(mockedShoppingListFacade.updateIngredient).toHaveBeenCalledTimes(1);
+                    // TODO: erst testen, wenn Code in component ausgebessert wurde
+                    // expect(mockedShoppingListFacade.updateIngredient).toHaveBeenCalledWith({ name: 'milk', amount: 2 });
+                });
+            });
 
-           describe('call resetForm', () => {
-               let spy: jest.SpyInstance;
+            describe('onSubmit with editMode = false', () => {
 
-               beforeEach(() => {
-                   spy = jest.spyOn(component, 'resetForm');
-                   component.onSubmit(mockedNgForm);
-               });
+                beforeEach(() => {
+                    component.editMode = false;
+                    component.onSubmit(mockedNgForm);
+                });
 
-               it('should be called', () => {
-                   expect(spy).toHaveBeenCalledTimes(1);
-               });
-           });
-       });
+                it('should call shoppingListFacade.addIngredient() method', () => {
+                    expect(mockedShoppingListFacade.addIngredient).toHaveBeenCalledTimes(1);
+                    // TODO: erst testen, wenn Code in component ausgebessert wurde
+                    // expect(mockedShoppingListFacade.addIngredient).toHaveBeenCalledWith({ id: '1', name: 'milk', amount: 2});
+                });
+            });
 
-       describe('resetForm', () => {
-           let spy: jest.SpyInstance;
+            describe('call resetForm', () => {
+                let spy: jest.SpyInstance;
 
-           beforeEach(() => {
-               spy = jest.spyOn(mockedNgForm, 'onReset');
-               component.resetForm(mockedNgForm);
-           });
+                beforeEach(() => {
+                    spy = jest.spyOn(component, 'resetForm');
+                    component.onSubmit(mockedNgForm);
+                });
 
-           it('should set editMode to false', () => {
-               expect(component.editMode).toBeFalsy();
-           });
+                afterEach(() => {
+                   spy.mockReset();
+                });
 
-           it('should call form.onReset method', () => {
-               expect(spy).toHaveBeenCalledTimes(2);
-           });
-       });
+                it('should be called', () => {
+                    expect(spy).toHaveBeenCalledTimes(1);
+                });
+            });
+        });
 
-       describe('onClear', () => {
-           let spy: jest.SpyInstance;
+        describe('resetForm', () => {
+            let spy: jest.SpyInstance;
 
-           beforeEach(() => {
-               spy = jest.spyOn(mockedNgForm, 'reset');
-               component.onClear();
-           });
+            beforeEach(() => {
+                spy = jest.spyOn(mockedNgForm, 'onReset');
+                component.resetForm(mockedNgForm);
+            });
 
-           // TODO!
-           it('should call shoppingListForm.reset', () => {
-               // expect(spy).toHaveBeenCalledTimes(1);
-           });
+            afterEach(() => {
+                spy.mockReset();
+            });
 
-           it('should set editMode to false', () => {
-               expect(component.editMode).toBeFalsy();
-           });
+            it('should set editMode to false', () => {
+                expect(component.editMode).toBeFalsy();
+            });
 
-       });
+            it('should call form.onReset method', () => {
+                expect(spy).toHaveBeenCalledTimes(1);
+            });
+        });
 
-       describe('onDelete', () => {
-           let spy: jest.SpyInstance;
+        describe('onClear', () => {
+            let spy: jest.SpyInstance;
 
-           beforeEach(() => {
-               spy = jest.spyOn(component, 'onClear');
-               component.onDelete();
-           });
+            beforeEach(() => {
+                spy = jest.spyOn(mockedNgForm, 'reset');
+                component.onClear();
+            });
 
-           it('should call shoppingListFacade.deleteIngredient method', () => {
-               expect(mockedShoppingListFacade.deleteIngredient).toHaveBeenCalledTimes(1);
-           });
+            afterEach(() => {
+               spy.mockReset();
+            });
 
-           it('should call onClear method', () => {
-               expect(spy).toHaveBeenCalledTimes(1);
-           });
-       });
-   });
+            // TODO!
+            it('should call shoppingListForm.reset', () => {
+                // expect(spy).toHaveBeenCalledTimes(1);
+            });
 
-   describe('template', () => {
-      let debugElement: DebugElement;
+            it('should set editMode to false', () => {
+                expect(component.editMode).toBeFalsy();
+            });
 
-      beforeEach(() => {
-          debugElement = fixture.debugElement;
-      });
+        });
 
-      describe('buttons', () => {
+        describe('onDelete', () => {
+            let spy: jest.SpyInstance;
 
-          describe('onSubmit button', () => {
-              let onSubmitBtn: HTMLElement;
+            beforeEach(() => {
+                spy = jest.spyOn(component, 'onClear');
+                component.onDelete();
+            });
 
-              beforeEach(() => {
-                  onSubmitBtn = debugElement.query(By.css('#onSubmitBtn')).nativeElement as HTMLElement;
-              });
+            afterEach(() => {
+               spy.mockReset();
+            });
 
-              it('should call onSubmit method when button is clicked', () => {
-                  const onSubmit = jest.spyOn(component, 'onSubmit');
+            it('should call shoppingListFacade.deleteIngredient method', () => {
+                expect(mockedShoppingListFacade.deleteIngredient).toHaveBeenCalledTimes(1);
+                // TODO:  Received: undefined bei Abfrage
+                // expect(mockedShoppingListFacade.deleteIngredient).toHaveBeenCalledWith(1);
+            });
 
-                  onSubmitBtn.click();
+            it('should call onClear method', () => {
+                expect(spy).toHaveBeenCalledTimes(1);
+            });
+        });
+    });
 
-                  expect(onSubmit).toHaveBeenCalledTimes(1);
-              });
+    describe('template', () => {
+        let debugElement: DebugElement;
 
-              describe('onSubmit button label - Update', () => {
+        beforeEach(() => {
+            debugElement = fixture.debugElement;
+        });
 
-                  beforeEach(() => {
-                     component.editMode = true;
-                     fixture.detectChanges();
-                  });
 
-                  it('should have correct label: Update', () => {
-                      expect(onSubmitBtn.textContent).toEqual('Update');
-                  });
-              });
+        describe('form', () => {
 
-              describe('onSubmit button label - Add', () => {
+            describe('name', () => {
+                let inputName: HTMLElement;
 
-                  beforeEach(() => {
-                      component.editMode = false;
-                  });
+                beforeEach(() => {
+                    inputName = debugElement.query(By.css('#name')).nativeElement as HTMLElement;
+                });
 
-                  it('should have correct label: Add', () => {
-                      expect(onSubmitBtn.textContent).toEqual('Add');
-                  });
-              });
-          });
+                it('should be empty', () => {
+                    expect(inputName.textContent).toEqual('');
+                });
+            });
 
-          describe('onDelete button', () => {
-              let onDeleteBtn: HTMLElement;
+            describe('amount', () => {
+                let inputAmount: HTMLElement;
 
-              beforeEach(() => {
-                  component.editMode = true;
-                  fixture.detectChanges();
-                  onDeleteBtn = debugElement.query(By.css('#onDeleteBtn')).nativeElement as HTMLElement;
-              });
+                beforeEach(() => {
+                    inputAmount = debugElement.query(By.css('#amount')).nativeElement as HTMLElement;
+                });
 
-              it('should call onDelete method when button is clicked', () => {
-                  const onDelete = jest.spyOn(component, 'onDelete');
+                it('should be empty', () => {
+                    expect(inputAmount.textContent).toEqual('');
+                });
+            });
 
-                  onDeleteBtn.click();
+            describe('buttons', () => {
 
-                  expect(onDelete).toHaveBeenCalledTimes(1);
-              });
+                describe('onSubmit button', () => {
+                    let onSubmitBtn: HTMLElement;
 
-              it('should have correct label: Delete', () => {
-                  expect(onDeleteBtn.textContent).toEqual('Delete');
-              });
-          });
+                    beforeEach(() => {
+                        onSubmitBtn = debugElement.query(By.css('#onSubmitBtn')).nativeElement as HTMLElement;
+                    });
 
-          describe('onClear button', () => {
-              let onClearBtn: HTMLElement;
+                    it('should call onSubmit method when button is clicked', () => {
+                        const onSubmit = jest.spyOn(component, 'onSubmit');
 
-              beforeEach(() => {
-                  component.editMode = true;
-                  onClearBtn = debugElement.query(By.css('#onClearBtn')).nativeElement as HTMLElement;
-              });
+                        onSubmitBtn.click();
 
-              it('should call onDelete method when button is clicked', () => {
-                  const onClear = jest.spyOn(component, 'onClear');
+                        expect(onSubmit).toHaveBeenCalledTimes(1);
+                    });
 
-                  onClearBtn.click();
+                    describe('onSubmit button label - Update', () => {
 
-                  expect(onClear).toHaveBeenCalledTimes(1);
-              });
+                        beforeEach(() => {
+                            component.editMode = true;
+                            // fixture.detectChanges();
+                            runOnPushChangeDetection(fixture);
+                        });
 
-              it('should have correct label: Clear', () => {
-                  expect(onClearBtn.textContent).toEqual('Clear');
-              });
-          });
+                        it('should have correct label: Update', () => {
+                            expect(onSubmitBtn.textContent).toEqual('Update');
+                        });
+                    });
 
-      });
+                    describe('onSubmit button label - Add', () => {
 
-   });
+                        beforeEach(() => {
+                            component.editMode = false;
+                        });
 
-    // TODO: überprüfen, ob die Form nach shoppingListForm.reset() und form.onReset() wirklich leer ist
+                        it('should have correct label: Add', () => {
+                            expect(onSubmitBtn.textContent).toEqual('Add');
+                        });
+                    });
+                });
+
+                describe('onDelete button', () => {
+                    let onDeleteBtn: HTMLElement;
+
+                    beforeEach(() => {
+                        component.editMode = true;
+                        runOnPushChangeDetection(fixture);
+                        onDeleteBtn = debugElement.query(By.css('#onDeleteBtn')).nativeElement as HTMLElement;
+                    });
+
+                    it('should call onDelete method when button is clicked', () => {
+                        const onDelete = jest.spyOn(component, 'onDelete');
+
+                        onDeleteBtn.click();
+
+                        expect(onDelete).toHaveBeenCalledTimes(1);
+                    });
+
+                    it('should have correct label: Delete', () => {
+                        expect(onDeleteBtn.textContent).toEqual('Delete');
+                    });
+                });
+
+                describe('onClear button', () => {
+                    let onClearBtn: HTMLElement;
+
+                    beforeEach(() => {
+                        component.editMode = true;
+                        onClearBtn = debugElement.query(By.css('#onClearBtn')).nativeElement as HTMLElement;
+                    });
+
+                    it('should call onClear method when button is clicked', () => {
+                        const onClear = jest.spyOn(component, 'onClear');
+
+                        onClearBtn.click();
+
+                        expect(onClear).toHaveBeenCalledTimes(1);
+                    });
+
+                    it('should have correct label: Clear', () => {
+                        expect(onClearBtn.textContent).toEqual('Clear');
+                    });
+                });
+
+            });
+
+        });
+
+    });
 
 });
+
